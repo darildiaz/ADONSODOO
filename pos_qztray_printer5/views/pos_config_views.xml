@@ -1,0 +1,28 @@
+<!-- views/pos_config_views.xml -->
+<odoo>
+    <record id="pos_qz_config_view_form" model="ir.ui.view">
+        <field name="name">pos.config.form.qz_tray</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Insertar dentro de la sección de "otros dispositivos" de POS -->
+            <xpath expr="//div[@id='other_devices']" position="inside">
+                <div class="content-group" invisible="not other_devices">
+                    <label string="Configuración QZ Tray:" class="o_light_label"/>
+                    <div class="row mt16">
+                        <div class="col-lg-6">
+                            <field name="qz_tray_host" placeholder="ej. localhost o IP"/>
+                        </div>
+                        <div class="col-lg-6">
+                            <field name="qz_default_printer" placeholder="Nombre impresora por defecto"/>
+                        </div>
+                    </div>
+                    <div role="alert" class="alert alert-info mt8">
+                        QZ Tray se utilizará para imprimir los recibos de cliente 
+                        y órdenes de cocina en esta sesión.
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

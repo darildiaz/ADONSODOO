@@ -1,0 +1,16 @@
+<!-- views/pos_printer_views.xml -->
+<odoo>
+    <record id="pos_qz_printer_view_form" model="ir.ui.view">
+        <field name="name">pos.printer.form.qz_tray</field>
+        <field name="model">pos.printer</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_printer_form"/>
+        <field name="arch" type="xml">
+            <!-- Agregar campo de nombre de impresora QZ Tray después del tipo -->
+            <field name="printer_type" position="after">
+                <field name="qz_printer_name" 
+                       string="Impresora QZ Tray" 
+                       invisible="printer_type != 'qz_tray'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

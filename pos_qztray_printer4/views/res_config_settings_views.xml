@@ -1,0 +1,16 @@
+<odoo>
+    <record id="view_res_config_settings_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.view_res_config_settings_form"/>
+        <field name="arch" type="xml">
+            <field name="qz_printer_name" position="after">
+                <!-- Campo con widget que llenará dinámicamente el dropdown -->
+                <field name="qz_printer_name"
+                       widget="qz_printer_selection"
+                       invisible="printer_type != 'qz_tray'"
+                       string="Impresora QZ Tray" />
+            </field>
+        </field>
+    </record>
+</odoo>

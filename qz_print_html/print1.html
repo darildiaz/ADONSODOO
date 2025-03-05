@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>qz print</title>
+    <script src="https://cdn.jsdelivr.net/npm/qz-tray/qz-tray.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+    // Verifica que QZ Tray está instalado y funcionando
+    qz.websocket.connect({ host: 'localhost', port: 8182 }).then(() => {
+    console.log("Conectado a QZ Tray en el puerto 8182");
+});
+
+    qz.websocket.connect().then(() => {
+    console.log("Conectado a QZ Tray");
+
+    // Obtiene la lista de impresoras disponibles
+    return qz.printers.find();
+}).then(printers => {
+    console.log("Impresoras disponibles:", printers);
+
+    // Poblar un select con las impresoras disponibles
+    let printerSelect = document.getElementById("printerSelect");
+    printers.forEach(printer => {
+        let option = document.createElement("option");
+        option.value = printer;
+        option.textContent = printer;
+        printerSelect.appendChild(option);
+    });
+}).catch(err => console.error("Error al conectar con QZ Tray:", err));
+
+function generatePDF() {
+            let selectedPrinter = document.getElementById("printerSelect").value;
+            if (!selectedPrinter) {
+                alert("Selecciona una impresora primero.");
+                return;
+            }
+
+            // Usar jsPDF para generar un documento PDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Agregar contenido al PDF (ejemplo simple)
+            doc.setFontSize(16);
+            doc.text("Ticket de Compra", 20, 20);
+            doc.setFontSize(12);
+            doc.text("Producto: Pizza", 20, 40);
+            doc.text("Monto: $10.00", 20, 50);
+
+            // Obtener el PDF como un string base64
+            let pdfBase64 = doc.output('datauristring');
+            let base64Content = pdfBase64.split(',')[1];  // Eliminar el prefijo "data:application/pdf;base64,"
+
+            // Configurar la impresora seleccionada
+            let config = qz.configs.create(selectedPrinter);
+
+            // Datos para imprimir: Formato PDF en base64
+            let data = [{
+                type: 'pixel',
+                format: 'pdf',
+                flavor: 'base64',
+                
+                data: base64Content
+            }];
+
+            // Enviar el PDF a la impresora seleccionada
+            qz.print(config, data).then(() => {
+                console.log("Impresión de PDF enviada a " + selectedPrinter);
+            }).catch(err => console.error("Error al imprimir PDF:", err));
+        }
+</script>
+</head>
+<body>
+    <select id="printerSelect"></select>
+<button onclick="generatePDF()">Generar e Imprimir Ticket</button>
+</body>
+</html>

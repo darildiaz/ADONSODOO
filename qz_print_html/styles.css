@@ -1,0 +1,35 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  h1 {
+    font-size: 1.2em;
+  }
+  #printerList, #ticketHeader, #productName, #productPrice {
+    margin: 5px 0;
+    padding: 4px;
+  }
+  #itemInputs {
+    margin: 10px 0;
+  }
+  #itemInputs input {
+    margin-right: 5px;
+  }
+  #itemInputs button {
+    padding: 5px 10px;
+  }
+  #itemTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  #itemTable th, #itemTable td {
+    border: 1px solid #ccc;
+    padding: 5px 8px;
+    text-align: left;
+  }
+  #printBtn {
+    margin-top: 15px;
+    padding: 8px 12px;
+  }
+  

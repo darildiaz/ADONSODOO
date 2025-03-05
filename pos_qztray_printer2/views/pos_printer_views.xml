@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_qztray_config_view_form" model="ir.ui.view">
+        <field name="name">pos.qztray.config.form.view</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Add QZ Tray settings to Hardware tab -->
+            <xpath expr="//form/sheet/group" position="inside">
+            <group>
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="use_qztray"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="use_qztray" string="QZ Tray Printing"/>
+                        <div class="text-muted">
+                            Use QZ Tray for receipt printing instead of IoT Box
+                        </div>
+                        <div class="content-group mt16" attrs="{'invisible': [('use_qztray', '=', False)]}">
+                            <div class="row">
+                                <label string="QZ Tray Server URL" for="qztray_server_url" class="col-lg-4 o_light_label"/>
+                                <field name="qztray_server_url" placeholder="http://localhost:8181"/>
+                            </div>
+                            <div class="row">
+                                <label string="Authentication Token" for="qztray_auth_token" class="col-lg-4 o_light_label"/>
+                                <field name="qztray_auth_token"/>
+                            </div>
+                            <div class="row">
+                                <label string="QZ Tray Certificate" for="qztray_certificate" class="col-lg-4 o_light_label"/>
+                                <field name="qztray_certificate" widget="text"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div role="alert" class="alert alert-warning" attrs="{'invisible': ['|', ('use_qztray', '=', False), ('iface_print_via_proxy', '=', False)]}">
+                    QZ Tray will be used instead of the receipt printer connected to the IoT Box.
+                </div>
+            </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

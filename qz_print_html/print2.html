@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejemplo Impresión QZ Tray</title>
+    <!-- Incluir la librería de QZ Tray -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/qz-tray@2.0.4/qz-tray.js"></script>
+    <!-- Incluir la librería jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <h1>Ejemplo Impresión con QZ Tray</h1>
+    <!-- Selección de impresora -->
+    <label for="printerSelect">Seleccionar Impresora:</label>
+    <select id="printerSelect"></select>
+    <br><br>
+
+    <!-- Botones para imprimir en ZPL o PDF -->
+    <button onclick="printTest()">Imprimir Test ZPL (Zebra)</button>
+    <button onclick="generatePDF()">Imprimir PDF (jsPDF)</button>
+
+    <script>
+        // Conectar con QZ Tray en el puerto por defecto (8182).
+        // Si necesitas especificar, podrías usar qz.websocket.connect({host:'localhost',port:8182})
+        qz.websocket.connect().then(() => {
+            console.log("Conectado a QZ Tray");
+            // Obtiene la lista de impresoras disponibles
+            return qz.printers.find();
+        }).then(printers => {
+            console.log("Impresoras disponibles:", printers);
+            // Poblar el select con las impresoras disponibles
+            let printerSelect = document.getElementById("printerSelect");
+            printers.forEach(printer => {
+                let option = document.createElement("option");
+                option.value = printer;
+                option.textContent = printer;
+                printerSelect.appendChild(option);
+            });
+        }).catch(err => console.error("Error al conectar con QZ Tray:", err));
+
+        // Función para imprimir un ZPL de prueba
+        function printTest() {
+            let selectedPrinter = document.getElementById("printerSelect").value;
+            
+            if (!selectedPrinter) {
+                alert("Selecciona una impresora primero.");
+                return;
+            }
+
+            let config = qz.configs.create(selectedPrinter); // Configurar la impresora
+            // Comando ZPL para impresoras térmicas
+            let data = [
+                "^XA",
+                "^FO50,50^ADN,36,20^FDImpresión de prueba ZPL^FS",
+                "^XZ"
+            ]; 
+
+            qz.print(config, data).then(() => {
+                console.log("Impresión enviada a " + selectedPrinter);
+            }).catch(err => console.error("Error al imprimir:", err));
+        }
+
+        // Función para generar e imprimir PDF con jsPDF
+        function generatePDF() {
+            let selectedPrinter = document.getElementById("printerSelect").value;
+            if (!selectedPrinter) {
+                alert("Selecciona una impresora primero.");
+                return;
+            }
+
+            // Usar jsPDF para generar un documento PDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Agregar contenido al PDF (ejemplo simple)
+            doc.setFontSize(16);
+            doc.text("Ticket de Compra", 20, 20);
+            doc.setFontSize(12);
+            doc.text("Producto: Pizza", 20, 40);
+            doc.text("Monto: $10.00", 20, 50);
+
+            // Obtener el PDF como un string base64
+            let pdfBase64 = doc.output('datauristring');
+            let base64Content = pdfBase64.split(',')[1];  // Eliminar el prefijo "data:application/pdf;base64,"
+
+            // Configurar la impresora seleccionada
+            let config = qz.configs.create(selectedPrinter);
+
+            // Datos para imprimir: Formato PDF en base64
+            let data = [{
+                type: 'pdf',
+                format: 'base64',
+                flavor: 'base64',
+                data: base64Content
+            }];
+
+            // Enviar el PDF a la impresora seleccionada
+            qz.print(config, data).then(() => {
+                console.log("Impresión de PDF enviada a " + selectedPrinter);
+            }).catch(err => console.error("Error al imprimir PDF:", err));
+        }
+    </script>
+</body>
+</html>
