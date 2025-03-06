@@ -1,0 +1,16 @@
+<!-- pos_printer_views.xml -->
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_printer_form_qztray" model="ir.ui.view">
+        <field name="name">pos.printer.form.view.qztray</field>
+        <field name="model">pos.printer</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_printer_form"/>
+        <field name="arch" type="xml">
+            <field name="printer_type" position="after">
+                <field name="qztray_printer_ip" attrs="{'invisible': [('printer_type', '!=', 'qztray_epos')], 'required': [('printer_type', '=', 'qztray_epos')]}"/>
+                <field name="qztray_printer_host" attrs="{'invisible': [('printer_type', '!=', 'qztray_epos')]}"/>
+                <field name="qztray_printer_name" attrs="{'invisible': [('printer_type', '!=', 'qztray_epos')], 'required': [('printer_type', '=', 'qztray_epos')]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

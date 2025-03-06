@@ -1,0 +1,30 @@
+<!-- pos_config_views.xml -->
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_qztray_config_view_form" model="ir.ui.view">
+        <field name="name">pos.qztray.config.form.view</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='other_devices']" position="inside">
+                <div class="content-group" attrs="{'invisible': [('other_devices', '=', False)]}">
+                    <div class="row">
+                        <label for="qztray_printer_ip" string="QZTray Printer" class="col-lg-3 o_light_label"/>
+                        <field name="qztray_printer_ip" placeholder="192.168.1.100"/>
+                    </div>
+                    <div class="row">
+                        <label for="qztray_printer_host" string="QZTray Host" class="col-lg-3 o_light_label"/>
+                        <field name="qztray_printer_host" placeholder="8182"/>
+                    </div>
+                    <div class="row">
+                        <label for="qztray_printer_name" string="Printer Name" class="col-lg-3 o_light_label"/>
+                        <field name="qztray_printer_name" placeholder="EPSON_TM-T20II"/>
+                    </div>
+                </div>
+                <div role="alert" class="alert alert-warning" attrs="{'invisible': ['|', '|', ('iface_print_via_proxy', '=', False), ('other_devices', '=', False), ('qztray_printer_ip', 'in', [False, ''])]}">
+                    The QZTray receipt printer will be used instead of the receipt printer connected to the IoT Box.
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
